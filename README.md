@@ -1,6 +1,15 @@
 "Abandonware" Game Launcher
 ===========================
 
+* [Overview](#overview)
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Usage](#usage)
+* [License](#license)
+
+Overview
+--------
+
 This is a little Python 3 app to launch "abandonware" easily from
 my console.  It looks like this:
 
@@ -84,7 +93,7 @@ games, but some of them require the fancier stuff that
 But rather than hardcode frotz for all the others, I can specify
 just `zmachine` and change the "default" later, should I decide
 I'd rather run *all* of them in grotz.  (Or even some other
-z-machine interprer altogether.)
+z-machine interpreter altogether.)
 
 The NES and Z-Machine types require a `rom` parameter in the
 `abandon.info` file, but the DOS/Dosbox ones do not, since they
