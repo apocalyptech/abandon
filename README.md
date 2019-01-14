@@ -5,6 +5,7 @@
 * [Installation](#installation)
 * [Configuration](#configuration)
 * [Usage](#usage)
+* [Extending](#extending)
 * [License](#license)
 
 Overview
@@ -23,6 +24,10 @@ interpreters like [Frotz](http://frotz.sourceforge.net/), or
 (less commonly) console emulators.  I wanted to have them all via
 a nice easily-traversed TUI menu system, and hence this silly
 little app was born.
+
+This was developed on Linux.  It could possibly be useful to
+someone on MacOS/OSX.  It could maybe run in Cygwin on Windows,
+but good luck on that front.
 
 I'd be a bit surprised if anyone but me finds this useful, but
 figured I'd put it out there just in case.
@@ -125,6 +130,17 @@ quit the app.
 Categories show up in yellow, launchable games show up in green.
 If there are any errors in an `abandon.info` file, there'll be
 a red entry in the list.
+
+Extending
+---------
+
+I thought about being clever with what emulators/interpreters/etc
+were supported, but since I'm likely to be the only user this thing
+ever has, in the end I didn't care.  The supported `type` parameters
+are specified in a couple of vars at the top of the `InfoFile`
+class, and then their commandlines are constructed inside that
+class's `activate` function.  It'd be quite trivial to add new
+ones.
 
 License
 -------
