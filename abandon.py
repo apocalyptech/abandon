@@ -99,13 +99,12 @@ class InfoFile(object):
                     raise Exception('type must be one of: {}'.format(', '.join(sorted(self.valid_types))))
             else:
                 raise Exception('type was not specified')
-        if self.type in self.require_rom:
-            if self.rom:
-                self.full_rom = os.path.join(self.base_dir, self.rom)
-                if not os.path.exists(self.full_rom):
-                    raise Exception('{} does not exist'.format(self.rom))
-            else:
-                raise Exception('does not specify a ROM file')
+        if self.type in self.require_rom and not self.rom:
+            raise Exception('does not specify a ROM file')
+        if self.rom:
+            self.full_rom = os.path.join(self.base_dir, self.rom)
+            if not os.path.exists(self.full_rom):
+                raise Exception('{} does not exist'.format(self.rom))
 
     def __lt__(self, other):
         return self.sort < other.sort
@@ -143,6 +142,9 @@ class InfoFile(object):
                     '-c', 'echo Using {}'.format(cfg_name),
                     '-conf', cfg_name,
                     ]
+
+            if self.rom:
+                cmdline.extend(['-c', self.rom])
 
         elif real_type == 'fceux':
 

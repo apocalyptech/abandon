@@ -106,9 +106,11 @@ just map the `C:` drive and leave it to there:
 
 ![Dosbox](screenshot-dosbox.png)
 
-By default, dosbox games will use `~/.dosbox/dosbox.conf` for
-the configuration.  If the file `abandon.conf` exists in the
-game's dir, though, it will use that instead.
+You can still specify a `rom` parameter for DOS/Dosbox games,
+though, to auto-launch the game.  By default, dosbox games will
+use `~/.dosbox/dosbox.conf` for the configuration.  If the file
+`abandon.conf` exists in the game's dir, though, it will use
+that instead.
 
 That's about it!  The directory you're "in" while running the
 app is scanned for `abandon.info` files each time you enter or
