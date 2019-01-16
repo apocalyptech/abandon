@@ -130,7 +130,8 @@ urwid for the TUI stuff, you should be able to click with your
 mouse too, should you want to do that.
 
 You can also hit `b` to go back to the previous dir, and `q` to
-quit the app.
+quit the app.  `o` can be used to open up an xterm inside the
+currently-selected menu item.
 
 Categories show up in yellow, launchable games show up in green.
 If there are any errors in an `abandon.info` file, there'll be

@@ -122,6 +122,17 @@ class InfoFile(object):
     def __repr__(self):
         return 'InfoFile({})'.format(self.name)
 
+    def open_dir(self):
+
+        cmdline = [
+                'uxterm',
+                '-sb',
+                '-sl', '4096',
+                '-e',
+                'cd "{}" && /bin/bash -l'.format(self.base_dir),
+                ]
+        subprocess.Popen(cmdline, close_fds=True)
+
     def activate(self):
         if self.category:
             return
@@ -313,6 +324,8 @@ class App(object):
 
     def __init__(self, base_dir):
 
+        urwid.register_signal(urwid.Button, ['click', 'open_dir'])
+
         self.cur_dir = base_dir
 
         self.breadcrumbs = ['[Abandonware]']
@@ -360,6 +373,7 @@ class App(object):
                 color_select = 'button_game_selected'
             button = urwid.Button(item.name)
             urwid.connect_signal(button, 'click', self.click_item, item)
+            urwid.connect_signal(button, 'open_dir', self.open_item, item)
             self.action_walker.append(urwid.AttrMap(button, color, focus_map=color_select))
             if prev_dir and item.base_dir == prev_dir:
                 self.action_walker.set_focus(idx)
@@ -407,6 +421,10 @@ class App(object):
 
         raise urwid.ExitMainLoop()
 
+    def open_item(self, button, item):
+
+        item.open_dir()
+
     def click_item(self, button, item):
 
         if item.category:
@@ -439,6 +457,8 @@ class App(object):
             self.back(None)
         elif key == 'q':
             raise urwid.ExitMainLoop()
+        elif key == 'o':
+            self.action_walker[self.action_walker.focus].original_widget._emit('open_dir')
 
 if __name__ == '__main__':
     base_dir = '/usr/local/games/abandon'
