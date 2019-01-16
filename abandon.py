@@ -41,6 +41,12 @@ class InfoFile(object):
         # NES
         'nes', 'fceux',
 
+        # SNES
+        'snes', 'snes9x-gtk',
+
+        # VBA
+        'vba', 'visualboyadvance-m',
+
         # Z-Machine
         'zmachine', 'frotz', 'grotz',
         ])
@@ -48,6 +54,8 @@ class InfoFile(object):
     # Types which require a 'rom' line
     require_rom = set([
         'nes', 'fceux',
+        'snes', 'snes9x-gtk',
+        'vba', 'visualboyadvance-m',
         'zmachine', 'frotz', 'grotz',
         ])
 
@@ -58,6 +66,8 @@ class InfoFile(object):
     type_trans = {
             'dos': 'dosbox',
             'nes': 'fceux',
+            'snes': 'snes9x-gtk',
+            'vba': 'visualboyadvance-m',
             'zmachine': 'frotz',
             }
 
@@ -150,6 +160,20 @@ class InfoFile(object):
 
             cmdline = [
                     'fceux',
+                    self.full_rom,
+                    ]
+
+        elif real_type == 'snes9x-gtk':
+
+            cmdline = [
+                    'snes9x-gtk',
+                    self.full_rom,
+                    ]
+
+        elif real_type == 'visualboyadvance-m':
+
+            cmdline = [
+                    'visualboyadvance-m',
                     self.full_rom,
                     ]
 

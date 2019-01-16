@@ -85,6 +85,10 @@ still optional, and will override `name` when sorting the list.
 * `dos` *(launches dosbox)*
 * `fceux`
 * `nes` *(launches fceux)*
+* `snes9x-gtk`
+* `snes` *(launches snes9x-gtk)*
+* `visualboyadvance-m`
+* `vba` *(launches visualboyadvance-m)*
 * `frotz`
 * `grotz`
 * `zmachine` *(launches frotz)*
@@ -100,17 +104,16 @@ just `zmachine` and change the "default" later, should I decide
 I'd rather run *all* of them in grotz.  (Or even some other
 z-machine interpreter altogether.)
 
-The NES and Z-Machine types require a `rom` parameter in the
-`abandon.info` file, but the DOS/Dosbox ones do not, since they
-just map the `C:` drive and leave it to there:
+All types except for DOS/Dosbox require a `rom` parameter in the
+`abandon.info` file.  DOS/Dosbox *can* specify the `rom` parameter
+to auto-launch an EXE/COM/BAT file, but will otherwise just map
+the `C:` drive and leave it there:
 
 ![Dosbox](screenshot-dosbox.png)
 
-You can still specify a `rom` parameter for DOS/Dosbox games,
-though, to auto-launch the game.  By default, dosbox games will
-use `~/.dosbox/dosbox.conf` for the configuration.  If the file
-`abandon.conf` exists in the game's dir, though, it will use
-that instead.
+By default, dosbox games will use `~/.dosbox/dosbox.conf` for the
+configuration.  If the file `abandon.conf` exists in the game's
+dir, though, it will use that instead.
 
 That's about it!  The directory you're "in" while running the
 app is scanned for `abandon.info` files each time you enter or
