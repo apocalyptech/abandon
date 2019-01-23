@@ -87,8 +87,11 @@ still optional, and will override `name` when sorting the list.
 * `nes` *(launches fceux)*
 * `snes9x-gtk`
 * `snes` *(launches snes9x-gtk)*
+* `dolphin`
+* `gameboy` *(launches dolphin)*
 * `visualboyadvance-m`
-* `vba` *(launches visualboyadvance-m)*
+* `gb` *(launches visualboyadvance-m)*
+* `gba` *(launches visualboyadvance-m)*
 * `frotz`
 * `grotz`
 * `zmachine` *(launches frotz)*

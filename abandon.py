@@ -44,8 +44,17 @@ class InfoFile(object):
         # SNES
         'snes', 'snes9x-gtk',
 
-        # VBA
-        'vba', 'visualboyadvance-m',
+        # Gamecube
+        'gamecube', 'dolphin',
+
+        # Gameboy (same as GBA)
+        'gb',
+
+        # Gameboy Advance
+        'gba', 'visualboyadvance-m',
+
+        # 3DS
+        '3ds', 'citra',
 
         # Z-Machine
         'zmachine', 'frotz', 'grotz',
@@ -55,7 +64,10 @@ class InfoFile(object):
     require_rom = set([
         'nes', 'fceux',
         'snes', 'snes9x-gtk',
-        'vba', 'visualboyadvance-m',
+        'gamecube', 'dolphin',
+        'gb',
+        'gba', 'visualboyadvance-m',
+        '3ds', 'citra',
         'zmachine', 'frotz', 'grotz',
         ])
 
@@ -67,7 +79,10 @@ class InfoFile(object):
             'dos': 'dosbox',
             'nes': 'fceux',
             'snes': 'snes9x-gtk',
-            'vba': 'visualboyadvance-m',
+            'gamecube': 'dolphin',
+            'gb': 'visualboyadvance-m',
+            'gba': 'visualboyadvance-m',
+            '3ds': 'citra',
             'zmachine': 'frotz',
             }
 
@@ -186,6 +201,20 @@ class InfoFile(object):
             cmdline = [
                     'visualboyadvance-m',
                     self.full_rom,
+                    ]
+
+        elif real_type == 'citra':
+
+            cmdline = [
+                    'citra-qt',
+                    self.full_rom,
+                    ]
+
+        elif real_type == 'dolphin':
+
+            cmdline = [
+                    'dolphin-emu',
+                    '-e', self.full_rom,
                     ]
 
         elif real_type == 'frotz':
