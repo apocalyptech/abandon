@@ -56,6 +56,9 @@ class InfoFile(object):
         # 3DS
         '3ds', 'citra',
 
+        # PS2
+        'ps2', 'pcsx2',
+
         # Z-Machine
         'zmachine', 'frotz', 'grotz',
         ])
@@ -68,6 +71,7 @@ class InfoFile(object):
         'gb',
         'gba', 'visualboyadvance-m',
         '3ds', 'citra',
+        'ps2', 'pcsx2',
         'zmachine', 'frotz', 'grotz',
         ])
 
@@ -83,6 +87,7 @@ class InfoFile(object):
             'gb': 'visualboyadvance-m',
             'gba': 'visualboyadvance-m',
             '3ds': 'citra',
+            'ps2': 'pcsx2',
             'zmachine': 'frotz',
             }
 
@@ -215,6 +220,13 @@ class InfoFile(object):
             cmdline = [
                     'dolphin-emu',
                     '-e', self.full_rom,
+                    ]
+
+        elif real_type == 'pcsx2':
+
+            cmdline = [
+                    'PCSX2',
+                    self.full_rom,
                     ]
 
         elif real_type == 'frotz':
