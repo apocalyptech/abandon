@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
-# Copyright (c) 2019, CJ Kucera
+# Copyright (c) 2019-2022, CJ Kucera
 # All rights reserved.
 #   
 # Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,9 @@ class InfoFile(object):
 
         # Z-Machine
         'zmachine', 'frotz', 'grotz',
+        
+        # ScummVM
+        'scummvm',
         ])
 
     # Types which require a 'rom' line
@@ -99,9 +102,15 @@ class InfoFile(object):
         self.category = False
         self.type = None
         self.rom = None
+        self.scummvm_options = None
         with open(filename) as df:
-            for line in [l.strip() for l in df.readlines()]:
-                if ': ' in line:
+            for l in df:
+                line = l.strip()
+                if line == '':
+                    pass
+                elif line[0] == '#':
+                    pass
+                elif ': ' in line:
                     (first, second) = line.split(': ', 1)
                     first = first.lower().strip()
                     second = second.strip()
@@ -117,9 +126,11 @@ class InfoFile(object):
                         self.sort = second.lower()
                     elif first == 'rom':
                         self.rom = second
+                    elif first == 'scummvm_options':
+                        self.scummvm_options = second.split()
                     else:
                         raise Exception('Unknown info file key: {}'.format(first))
-                elif line != '':
+                else:
                     raise Exception('Unknown line: {}'.format(line))
         if self.sort is None:
             self.sort = self.name.lower()
@@ -135,6 +146,8 @@ class InfoFile(object):
             self.full_rom = os.path.join(self.base_dir, self.rom)
             if not os.path.exists(self.full_rom):
                 raise Exception('{} does not exist'.format(self.rom))
+        if self.type == 'scummvm' and not self.scummvm_options:
+            raise Exception('scummvm_options is required for scummvm titles')
 
     def __lt__(self, other):
         return self.sort < other.sort
@@ -247,8 +260,14 @@ class InfoFile(object):
                     'grotz', self.full_rom,
                     ]
 
+        elif real_type == 'scummvm':
+
+            cmdline = ['scummvm']
+            cmdline.extend(self.scummvm_options)
+
         lines = []
         if len(cmdline) > 0:
+            lines.append('Running: {}'.format(' '.join(cmdline)))
             cp = subprocess.run(cmdline,
                     capture_output=True,
                     text=True,

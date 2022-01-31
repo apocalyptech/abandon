@@ -97,6 +97,7 @@ still optional, and will override `name` when sorting the list.
 * `frotz`
 * `grotz`
 * `zmachine` *(launches frotz)*
+* `scummvm`
 
 The idea behind having a "generic" name is that some games may
 end up working better with some emulators/interpreters/environments
@@ -119,6 +120,16 @@ the `C:` drive and leave it there:
 By default, dosbox games will use `~/.dosbox/dosbox.conf` for the
 configuration.  If the file `abandon.conf` exists in the game's
 dir, though, it will use that instead.
+
+`scummvm` titles require an additional line inside `abandon.info`,
+namely `scummvm_options`.  This will provide extra ScummVM arguments
+for the game in question, and should notably include the `GAME`
+parameter that ScummVM expects.  For example:
+
+    name: The Secret of Monkey Island
+    sort: secret of monkey island 1
+    type: scummvm
+    scummvm_options: --scale-factor=4 scumm:monkey
 
 That's about it!  The directory you're "in" while running the
 app is scanned for `abandon.info` files each time you enter or
