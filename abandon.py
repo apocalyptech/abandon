@@ -562,6 +562,6 @@ class App(object):
             self.action_walker[self.action_walker.focus].original_widget._emit('open_dir')
 
 if __name__ == '__main__':
-    base_dir = '/usr/local/games/abandon'
+    base_dir = '/games/abandon'
     app = App(base_dir)
     app.run()

@@ -51,7 +51,7 @@ Configuration
 
 The app uses files named `abandon.info` on your filesystem to
 know what to display on the menu.  It's hardcoded to start in
-`/usr/local/games/abandon`, so you'll have to change that by
+`/games/abandon`, so you'll have to change that by
 hand down at the bottom of the script.  If anyone else ever
 actually uses this, feel free to bug me and I'll optionize
 that or something.
