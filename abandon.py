@@ -27,6 +27,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
+import re
 import sys
 import urwid
 import subprocess
@@ -67,16 +68,21 @@ class InfoFile(object):
         ])
 
     # Types which require a 'rom' line
-    require_rom = set([
-        'nes', 'fceux',
-        'snes', 'snes9x-gtk',
-        'gamecube', 'dolphin',
-        'gb',
-        'gba', 'visualboyadvance-m',
-        '3ds', 'citra',
-        'ps2', 'pcsx2',
-        'zmachine', 'frotz', 'grotz',
-        ])
+    require_rom = {
+            'nes', 'fceux',
+            'snes', 'snes9x-gtk',
+            'gamecube', 'dolphin',
+            'gb',
+            'gba', 'visualboyadvance-m',
+            '3ds', 'citra',
+            'ps2', 'pcsx2',
+            'zmachine', 'frotz', 'grotz',
+            }
+
+    # Types which support the 'loopback' parameters
+    support_loopback = {
+            'dos', 'dosbox',
+            }
 
     # Type translations, basically allowing us to default to a specific
     # emulator but allowing an info file to specify one manually (for
@@ -102,7 +108,9 @@ class InfoFile(object):
         self.category = False
         self.type = None
         self.rom = None
+        self.rom_drive = 'c'
         self.scummvm_options = None
+        self.loopbacks = []
         with open(filename) as df:
             for l in df:
                 line = l.strip()
@@ -125,29 +133,50 @@ class InfoFile(object):
                     elif first == 'sort':
                         self.sort = second.lower()
                     elif first == 'rom':
-                        self.rom = second
+                        if self.type in self.support_loopback:
+                            if match := re.match(r"""
+                                    ^
+                                    (?P<drive>[a-zA-Z]):
+                                    (?P<rom>.+)
+                                    $
+                                    """, second, re.X):
+                                self.rom_drive = match.group('drive')
+                                self.rom = match.group('rom')
+                            else:
+                                self.rom_drive = 'c'
+                                self.rom = second
+                        else:
+                            self.rom = second
                     elif first == 'scummvm_options':
                         self.scummvm_options = second.split()
+                    elif first == 'loopback':
+                        if '|' not in second:
+                            raise RuntimeError(f'Found a loopback mount without pipe char: {second}')
+                        self.loopbacks.append(second.split('|', 1))
                     else:
-                        raise Exception('Unknown info file key: {}'.format(first))
+                        raise RuntimeError('Unknown info file key: {}'.format(first))
                 else:
-                    raise Exception('Unknown line: {}'.format(line))
+                    raise RuntimeError('Unknown line: {}'.format(line))
         if self.sort is None:
             self.sort = self.name.lower()
         if not self.category:
             if self.type:
                 if self.type not in self.valid_types:
-                    raise Exception('type must be one of: {}'.format(', '.join(sorted(self.valid_types))))
+                    raise RuntimeError('type must be one of: {}'.format(', '.join(sorted(self.valid_types))))
             else:
-                raise Exception('type was not specified')
+                raise RuntimeError('type was not specified')
         if self.type in self.require_rom and not self.rom:
-            raise Exception('does not specify a ROM file')
+            raise RuntimeError('does not specify a ROM file')
         if self.rom:
-            self.full_rom = os.path.join(self.base_dir, self.rom)
-            if not os.path.exists(self.full_rom):
-                raise Exception('{} does not exist'.format(self.rom))
+            # rom_drive only really makes sense for dos/dosbox, but that's fine.
+            if self.rom_drive.lower() == 'c':
+                self.full_rom = os.path.join(self.base_dir, self.rom)
+                if not os.path.exists(self.full_rom):
+                    raise RuntimeError('{} does not exist'.format(self.rom))
         if self.type == 'scummvm' and not self.scummvm_options:
-            raise Exception('scummvm_options is required for scummvm titles')
+            raise RuntimeError('scummvm_options is required for scummvm titles')
+        if self.loopbacks and self.type not in self.support_loopback:
+            raise RuntimeError(f'found loopback option but {self.type} does not support loopback')
 
     def __lt__(self, other):
         return self.sort < other.sort
@@ -189,14 +218,26 @@ class InfoFile(object):
             if not os.path.exists(cfg_name):
                 cfg_name = os.path.expanduser('~/.dosbox/dosbox.conf')
 
+            # Initial commandline + C: mounting
             cmdline = [
                     'dosbox',
                     '-c', 'mount c "{}"'.format(self.base_dir),
-                    '-c', 'c:',
-                    '-c', 'echo Using {}'.format(cfg_name),
-                    '-conf', cfg_name,
                     ]
 
+            # If we have any loopbacks to mount, do it.
+            for drive, loop_file in self.loopbacks:
+                cmdline.extend(['-c', f'imgmount {drive} "{loop_file}" -t iso'])
+
+            # Do the required drive change
+            cmdline.extend(['-c', f'{self.rom_drive}:'])
+
+            # Report on config file and use it
+            cmdline.extend([
+                '-c', 'echo Using {}'.format(cfg_name),
+                '-conf', cfg_name,
+                ])
+
+            # Now if we have a ROM, auto-execute it
             if self.rom:
                 cmdline.extend(['-c', self.rom])
 

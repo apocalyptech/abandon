@@ -137,6 +137,21 @@ leave, so if you make changes to the files, or add/delete
 directories with `abandon.py` still running, those changes will
 be refreshed by going out and back in to the dir in question.
 
+One additional option available for games running under dos/dosbox is
+mounting a "loopback" image such as a cdrom.  This is generally not
+especially useful, but one game for which I found it handy was
+Wing Commander 3.  For instance, its `abandon.info` for me is:
+
+    name: Wing Commander 3
+    sort: wing commander 3
+    type: dos
+    loopback: d|DATA.DAT
+    rom: d:wc3.exe
+
+So `DATA.DAT` is mounted as D:, and then the "rom" to run is specified
+as `wc3.exe` from inside that image.  Note the extra drive specification
+on the `rom` field, which you ordinarily don't have to do.
+
 Usage
 -----
 
