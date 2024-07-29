@@ -92,6 +92,8 @@ still optional, and will override `name` when sorting the list.
 * `visualboyadvance-m`
 * `gb` *(launches visualboyadvance-m)*
 * `gba` *(launches visualboyadvance-m)*
+* `ps1` *(launches mednafen)*
+* `mednafen`
 * `ps2` *(launches pcsx2)*
 * `pcsx2`
 * `frotz`
